@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../Todo.svelte",
+    "../TodoList.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n  import {createEventDispatcher} from 'svelte';\n  import {fade} from 'svelte/transition';\n  const dispatch = createEventDispatcher();\n  export let todo;\n</script>\n\n<style>\n  .done-true {\n    color: gray;\n    text-decoration: line-through;\n  }\n\n  li {\n    margin-top: 5px;\n  }\n</style>\n\n<li transition:fade>\n  <input\n    type=\"checkbox\"\n    checked={todo.done}\n    on:change={() => dispatch('toggleDone')} />\n  <span class={'done-' + todo.done}>{todo.text}</span>\n  <button on:click={() => dispatch('delete')}>Delete</button>\n</li>\n",
+    "<script>\n  //import ShippingLabel from './ShippingLabel.svelte';\n  import Todo from './Todo.svelte';\n\n  let lastId = 0;\n  const createTodo = (text, done = false) => ({id: ++lastId, text, done});\n\n  let todoText = '';\n  let todos = [\n    createTodo('learn Svelte', true),\n    createTodo('build a Svelte app')\n  ];\n\n  //let uncompletedCount = 0;\n  $: uncompletedCount = todos.filter(t => !t.done).length;\n  $: status = `${uncompletedCount} of ${todos.length} remaining`;\n\n  function addTodo() {\n    todos = todos.concat(createTodo(todoText));\n    todoText = '';\n  }\n\n  function archiveCompleted() {\n    todos = todos.filter(t => !t.done);\n  }\n\n  function deleteTodo(todoId) {\n    todos = todos.filter(t => t.id !== todoId);\n  }\n\n  function toggleDone(todo) {\n    const {id} = todo;\n    todos = todos.map(t => (t.id === id ? {...t, done: !t.done} : t));\n  }\n</script>\n\n<style>\n  button {\n    margin-left: 10px;\n  }\n\n  ul.unstyled {\n    list-style: none;\n    margin-left: 0;\n    padding-left: 0;\n  }\n</style>\n\n<div>\n  <!--ShippingLabel>\n    Mark Volkmann<br />\n    123 Some Street<br />\n    Somewhere, Some State 12345\n  </ShippingLabel>\n  <ShippingLabel /-->\n  <h2>To Do List</h2>\n  <div>\n    {status}\n    <button on:click={archiveCompleted}>Archive Completed</button>\n  </div>\n  <br />\n  <form on:submit|preventDefault>\n    <input\n      data-testid=\"todo-input\"\n      type=\"text\"\n      size=\"30\"\n      placeholder=\"enter new todo here\"\n      bind:value={todoText} />\n    <button disabled={!todoText} on:click={addTodo}>Add</button>\n  </form>\n  <ul class=\"unstyled\">\n    {#each todos as todo}\n      <Todo\n        {todo}\n        on:delete={() => deleteTodo(todo.id)}\n        on:toggleDone={() => toggleDone(todo)} />\n    {/each}\n  </ul>\n</div>\n"
+  ],
+  "names": [],
+  "mappings": "AAQE,UAAU,cAAC,CAAC,AACV,KAAK,CAAE,IAAI,CACX,eAAe,CAAE,YAAY,AAC/B,CAAC,AAED,EAAE,cAAC,CAAC,AACF,UAAU,CAAE,GAAG,AACjB,CAAC;ACsBD,MAAM,eAAC,CAAC,AACN,WAAW,CAAE,IAAI,AACnB,CAAC,AAED,EAAE,SAAS,eAAC,CAAC,AACX,UAAU,CAAE,IAAI,CAChB,WAAW,CAAE,CAAC,CACd,YAAY,CAAE,CAAC,AACjB,CAAC"
+}
